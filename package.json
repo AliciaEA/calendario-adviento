@@ -1,7 +1,8 @@
 {
   "name": "calendario-adviento",
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/index.ts",
+    "start": "bun run src/index.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.3",

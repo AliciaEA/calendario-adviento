@@ -15,11 +15,20 @@ app.get("/api/calendar", (c)=>{
 })
 
 //add
-app.post("/api/calendar", async(c) =>{
-  const body = await c.req.json()
+app.post("/api/calendar", async (c) => {
+  try {
+    const body = await c.req.json()
+    // Basic validation
+    if (!body || typeof body.item !== "string" || !body.item.trim()) {
+      return c.json({ error: "Invalid body: expected { item: string }" }, 400)
+    }
 
-  createGift(body.item)
-  return c.json({message: "Gift created"},201)
+    const result = createGift(body.item.trim())
+    return c.json({ message: "Gift created", result }, 201)
+  } catch (err) {
+    console.error("POST /api/calendar error:", err)
+    return c.json({ error: String(err) }, 500)
+  }
 })
 // Open Calendar
 app.patch("/api/open/:id/open",(c)=>{
