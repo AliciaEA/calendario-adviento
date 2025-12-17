@@ -1,6 +1,6 @@
 import {Hono} from "hono"
 import {cors} from 'hono/cors'
-import {getCalendar, createGift, openGift} from "./db/queries"
+import {getCalendar, createGift, openGift, deleteGift} from "./db/queries"
 
 const app = new Hono()
 
@@ -14,21 +14,25 @@ app.get("/api/calendar", (c)=>{
   return c.json(allDays)
 })
 
+//add
+app.post("/api/calendar", async(c) =>{
+  const body = await c.req.json()
+
+  createGift(body.item)
+  return c.json({message: "Gift created"},201)
+})
 // Open Calendar
-app.patch("/api/open/:id",(c)=>{
+app.patch("/api/open/:id/open",(c)=>{
   const id = Number(c.req.param("id"))
 openGift(id)
-return c.json({message: "Happy Christmas little hackclubber, git opened!"})
+return c.json({ok:true})
 })
 
-// Fill
-
-app.get("/api/setup",(c) =>{
-  createGift("🎄 Day 1: Christmas song")
-  createGift("🎁 Day 2: Discount on Github Shop")
-  createGift("🎁 Day 3: A 3d Printer")
-
-  return c.json({message: "Advent Calendar Initialized with 3 gifts"})
+//delete
+app.patch("/api/calendar/:id",(c)=>{
+  const id = Number(c.req.param("id"))
+  deleteGift(id)
+  return c.json({ok:true})
 })
 
 const port = Number(process.env.PORT) || 3000

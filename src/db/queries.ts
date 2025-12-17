@@ -20,3 +20,7 @@ export function createGift(content: string){
 export function openGift(id:number){
     return db.update(days).set({isOpen:1}).where(eq(days.id, id)).run()
 }
+
+export function deleteGift(id:number){
+    return db.delete(days).where(eq(days.id, id)).run()
+}
